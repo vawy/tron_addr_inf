@@ -1,13 +1,12 @@
 from sqlalchemy import Column, String, Numeric, Integer, Boolean
-from sqlalchemy.ext.declarative import declarative_base
 
 from app.utils.mixins import IdMixin, TimestampMixin
 
-Base = declarative_base()
+from metadata import Base
 
-class Wallet(IdMixin, TimestampMixin, Base):
-    """Tron wallet information."""
-    __tablename__ = "wallets"
+
+class TronWallet(IdMixin, TimestampMixin, Base):
+    __tablename__ = "tron_wallet"
 
     address = Column(String(34), nullable=False, index=True)
     trx_balance = Column(Numeric(20, 6), default=0.0)

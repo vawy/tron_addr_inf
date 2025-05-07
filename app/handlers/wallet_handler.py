@@ -2,6 +2,8 @@ from fastapi import APIRouter, Request, status
 from fastapi_pagination import Page
 
 from app.schemas.wallet_schema import WalletResponse, WalletCreate
+from app.reps.tron_wallet_rep import WalletRep
+from app.services.tron_service import TronService
 
 
 router = APIRouter(
@@ -20,10 +22,11 @@ router = APIRouter(
 async def get_wallet_info(
         request: Request,
         body: WalletCreate
-) -> WalletResponse:
+):
     """Get wallet data and save to DB."""
     async with request.app.state.db.get_master_session() as session:
-        pass
+        wallet_data_dict = await TronService.get_wallet_data(address=body.address)
+        # db_record = repo.save_wallet_data(wallet_data)
 
 
 @router.get(
@@ -38,4 +41,5 @@ async def get_wallet_info(
 ) -> Page[WalletResponse]:
     """Get wallet data and save to DB."""
     async with request.app.state.db.get_master_session() as session:
-        pass
+        wallet_rep = WalletRep(session=session)
+        return await wallet_rep.find_all()
