@@ -1,6 +1,6 @@
-from app.models.wallet_model import Wallet
+from app.models.tron_wallet_model import TronWallet
 
 
 __all__ = [
-    'Wallet'
+    'TronWallet'
 ]

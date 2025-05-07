@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, Numeric, Integer, Boolean
 
-from app.utils.mixins import IdMixin, TimestampMixin
-
 from metadata import Base
+
+from app.utils.mixins import IdMixin, TimestampMixin
 
 
 class TronWallet(IdMixin, TimestampMixin, Base):
