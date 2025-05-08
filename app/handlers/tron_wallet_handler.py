@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, status
 from fastapi_pagination import Page
 
-from app.schemas.wallet_schema import WalletResponse, WalletCreate
+from app.schemas.wallet_schema import WalletResponse, WalletBase
 from app.reps.tron_wallet_rep import TronWalletRep
 
 
@@ -20,7 +20,7 @@ router = APIRouter(
 )
 async def get_wallet_info(
         request: Request,
-        body: WalletCreate
+        body: WalletBase
 ):
     async with request.app.state.db.get_master_session() as session:
         tron_wallet_rep = TronWalletRep(session=session)

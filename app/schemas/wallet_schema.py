@@ -1,9 +1,11 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+from app.utils.fields_constraints import TronWalletAddressField
+
 
 class WalletBase(BaseModel):
-    address: str
+    address: TronWalletAddressField
 
 
 class WalletCreate(WalletBase):

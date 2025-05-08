@@ -7,6 +7,6 @@ class TronWalletRep(DefaultRep):
         super().__init__(session=session, model=TronWallet)
 
     async def get_wallet(self, address: str):
-        wallet_data = self.tron_service.get_wallet_data(address=address)
-        result = self.create_one(body=wallet_data)
+        wallet_data = await self.tron_service.get_wallet_data(address=address)
+        result = await self.create_one(body=wallet_data)
         return result
