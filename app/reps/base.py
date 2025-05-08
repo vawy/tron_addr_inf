@@ -1,43 +1,38 @@
-from fastapi import HTTPException
+import logging
+
+from fastapi_pagination.ext.sqlalchemy import paginate
+
+from pydantic import BaseModel
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm.strategy_options import LoaderOption
-from sqlalchemy.sql.selectable import Select
-
-from starlette import status
 
 from metadata import Base
 
 
 class BaseRep:
-    def __init__(
-            self,
-            session: AsyncSession,
-            model: Base,
-            options: list[LoaderOption] | None = None,
-    ):
+    def __init__(self, session: AsyncSession, model: type[Base]):
         self.session = session
         self.model = model
 
-    def _build_default_query(self) -> Select:
-        return select(self.model)
+    async def find_all(self, params=None):
+        query = select(self.model)
 
-    async def find_all(self, query=None):
-        if query is None:
-            query = self._build_default_query()
+        return await paginate(self.session, query, params)
 
-        result = await self.session.scalars(query)
-        result = result.all()
-        return result
+    async def create_one(self, body: dict | BaseModel):
+        if isinstance(body, BaseModel):
+            new_data = body.model_dump()
+        else:
+            new_data = body.copy()
 
-    async def create_one(self, model: Base, body: dict):
-        for key, value in body.items():
-            try:
-                setattr(self.model, key, value)
-            except AttributeError:
-                pass
-                # logging.warning(
-                #     f"Can't assing attribute key: {key} with value: {value} to model {model.__table__}. You probably assigning value to hybrid_property")
-
-        return model
+        try:
+            instance = self.model(**new_data)
+            self.session.add(instance)
+            await self.session.flush()
+            await self.session.refresh(instance)
+            return instance
+        except Exception as e:
+            logging.error(f"Error creating {self.model.__name__}: {str(e)}")
+            await self.session.rollback()
+            raise

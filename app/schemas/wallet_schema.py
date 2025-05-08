@@ -7,7 +7,11 @@ class WalletBase(BaseModel):
 
 
 class WalletCreate(WalletBase):
-    pass
+    trx_balance: float
+    bandwidth: int
+    energy: int
+    is_success: bool
+    error_message: str | None
 
 
 class WalletResponse(WalletBase):
@@ -16,6 +20,8 @@ class WalletResponse(WalletBase):
     bandwidth_limit: int
     energy: int
     energy_limit: int
+    is_success: bool
+    error_message: str | None
     created_at: datetime
     updated_at: datetime
 

@@ -1,7 +1,7 @@
-from app.handlers.wallet_handler import router as wallet_router
+from app.handlers.tron_wallet_handler import router as tron_wallet_router
 
 routes = [
-    wallet_router
+    tron_wallet_router
 ]
 
 __all__ = [

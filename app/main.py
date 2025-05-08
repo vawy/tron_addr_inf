@@ -12,6 +12,7 @@ from app.utils.base import bind_routes, lifespan
 from app.handlers import routes
 from app.settings import Settings, settings
 
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
